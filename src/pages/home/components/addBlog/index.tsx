@@ -9,7 +9,6 @@ import Button from "../../../../components/button";
 import Input from "../../../../components/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
-import ButtonLoader from "../../../../components/buttonLoader";
 
 const AddBlog: React.FC = () => {
   const { refetch } = useGetAllBlogsQuery();
@@ -75,8 +74,8 @@ const AddBlog: React.FC = () => {
               />
             ))}
 
-            <Button type="submit" color="#eb3e8c">
-              {loading ? <ButtonLoader /> : "Create Blog"}
+            <Button type="submit" color="#eb3e8c" loading={loading}>
+              Create Blog
             </Button>
             <Button
               type="button"

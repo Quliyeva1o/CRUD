@@ -1,11 +1,13 @@
-import React from 'react';
-import styles from './index.module.scss';
+import React from "react";
+import styles from "./index.module.scss";
+import ButtonLoader from "../buttonLoader";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   onClick?: () => void;
   color?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
+  loading?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -13,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   color = "#eb3e8c",
   size = "medium",
+  loading = false,
   ...props
 }) => {
   return (
@@ -22,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
       style={{ backgroundColor: color }}
       {...props}
     >
-      {children}
+      {loading ? <ButtonLoader /> : children }
     </button>
   );
 };

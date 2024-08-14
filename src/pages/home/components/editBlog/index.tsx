@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import { useUpdateBlogMutation, useGetBlogQuery} from "../../../../redux/slices/apiSlice";
+import {useUpdateBlogMutation , useGetBlogQuery} from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import Button from "../../../../components/button";
 import Input from "../../../../components/input";
 import Loader from "../../../../components/loader";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
-import ButtonLoader from "../../../../components/buttonLoader";
 
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
   const { data: blog, error, isLoading, refetch } = useGetBlogQuery(postId);
@@ -29,11 +28,11 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
         await updateBlog({ id: postId, changes: values }).unwrap();
         resetForm();
         onClose();
-        refetch();
-        setLoading(false);
+        refetch().then(() => {
+          setLoading(false);
+        });
       } catch (err) {
         console.log(err);
-        alert("Failed to edit blog. Please try again.");
         setLoading(false);
       }
     },
@@ -71,8 +70,8 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
             />
           ))}
 
-          <Button type="submit" color="#b13ce7">
-            {loading ? <ButtonLoader /> : "Save Changes"}
+          <Button type="submit" color="#eb3e8c" loading={loading}>
+            Save Changes
           </Button>
           <Button type="button" onClick={onClose} color="#dc3545">
             Close

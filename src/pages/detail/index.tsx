@@ -43,10 +43,7 @@ const Detail: React.FC = () => {
     <div className={styles.detail}>
       <h1>{blog.title}</h1>
       <img
-        src={
-          blog.img ||
-          "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
-        }
+        src={  blog.img || "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
         alt={blog.title}
       />
       <p>{blog.body}</p>
@@ -69,7 +66,7 @@ const Detail: React.FC = () => {
       <div className={styles.commentForm}>
         <h2>Leave a Comment</h2>
         <form onSubmit={formik.handleSubmit}>
-          {AddComment.map((input) => (
+          {addCommentForm.map((input) => (
             <Input
               key={input.name}
               type={input.type}
@@ -97,7 +94,7 @@ const Detail: React.FC = () => {
 export default Detail;
 
 //FORMFIELDS
-const AddComment = [
+const addCommentForm = [
   { type: "textarea", name: "body", placeholder: "Your Comment" },
   { type: "email", name: "email", placeholder: "Your Email" },
   { type: "text", name: "name", placeholder: "Your Name" },
