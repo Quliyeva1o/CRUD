@@ -1,16 +1,22 @@
 .header {
     width: 100%;
-   
-    background-color: #3e3586;
-    img,
-    h1 {
+    background-color: #5c3586;
+    img {
         color: #fff;
-        padding: 10px;
+        padding: 10px 0;
         border-radius: 50%;
         width: 40px;
     }
+    h1 {
+        font-size: 26px;
+        padding: 10px 0;
+        a{
+            text-decoration: none;
+            color: #fff;
+        }
+    }
 }
-.content{
+.content {
     display: flex;
     justify-content: space-between;
     align-items: center;

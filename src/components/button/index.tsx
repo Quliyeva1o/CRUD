@@ -11,7 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
-  color = "#007bff",
+  color = "#eb3e8c",
   size = "medium",
   ...props
 }) => {

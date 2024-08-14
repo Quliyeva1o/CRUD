@@ -1,39 +1,29 @@
 import React, { useState } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import * as Yup from "yup";
-import {
-  useCreateBlogMutation,
-  useGetAllBlogsQuery,
-} from "../../../../redux/slices/apiSlice";
+import { useCreateBlogMutation,useGetAllBlogsQuery} from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import Button from "../../../../components/button";
 import Input from "../../../../components/input";
+import { BlogFormValues } from "../../../../types";
+import { blogValidationSchema } from "../../../../utils/validations";
 
-const validationSchema = Yup.object({
-  title: Yup.string().required("Title is required"),
-  body: Yup.string().required("Body is required"),
-  img: Yup.string().url("Invalid image URL").required("Image URL is required"),
-});
 
-interface FormValues {
-  title: string;
-  body: string;
-  img: string;
-}
 
 const AddBlog: React.FC = () => {
   const { refetch } = useGetAllBlogsQuery();
   const [createBlog] = useCreateBlogMutation();
   const [showModal, setShowModal] = useState(false);
 
-  const formik = useFormik<FormValues>({
+
+  //FORMIK
+  const formik = useFormik<BlogFormValues>({
     initialValues: {
       title: "",
       body: "",
       img: "",
     },
-    validationSchema,
-    onSubmit: (values, { resetForm }: FormikHelpers<FormValues>) => {
+    validationSchema:blogValidationSchema,
+    onSubmit: (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
       createBlog(values)
         .then(() => {
           refetch();
@@ -47,9 +37,11 @@ const AddBlog: React.FC = () => {
     },
   });
 
+
+  //COMPONENT
   return (
     <>
-      <Button onClick={() => setShowModal(true)} color="#007bff">
+      <Button onClick={() => setShowModal(true)} color="#eb3e8c">
         Create Blog
       </Button>
 
@@ -58,51 +50,34 @@ const AddBlog: React.FC = () => {
           className={styles.modal}
           role="dialog"
           aria-labelledby="modal-title"
-          aria-modal="true"
-        >
+          aria-modal="true">
+
           <h2 id="modal-title">Create a new blog</h2>
           <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
-            <Input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={formik.values.title}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.title && Boolean(formik.errors.title)}
-              errorMessage={formik.errors.title}
-            />
+            {formFields.map(({ type, name, placeholder }) => (
+              <Input
+                key={name}
+                type={type}
+                name={name}
+                placeholder={placeholder}
+                value={formik.values[name as keyof BlogFormValues]}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched[name as keyof BlogFormValues] &&
+                  Boolean(formik.errors[name as keyof BlogFormValues])
+                }
+                errorMessage={formik.errors[name as keyof BlogFormValues]}
+              />
+            ))}
 
-            <Input
-              type="textarea"
-              name="body"
-              placeholder="Body"
-              value={formik.values.body}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.body && Boolean(formik.errors.body)}
-              errorMessage={formik.errors.body}
-            />
-
-            <Input
-              type="text"
-              name="img"
-              placeholder="Image URL"
-              value={formik.values.img}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.img && Boolean(formik.errors.img)}
-              errorMessage={formik.errors.img}
-            />
-
-            <Button type="submit" color="#007bff">
+            <Button type="submit" color="#eb3e8c">
               Create Blog
             </Button>
             <Button
               type="button"
               onClick={() => setShowModal(false)}
-              color="#dc3545"
-            >
+              color="#dc3545">
               Close
             </Button>
           </form>
@@ -113,3 +88,11 @@ const AddBlog: React.FC = () => {
 };
 
 export default AddBlog;
+
+
+//FORMFIELDS
+const formFields = [
+  { type: "text", name: "title", placeholder: "Title" },
+  { type: "textarea", name: "body", placeholder: "Body" },
+  { type: "text", name: "img", placeholder: "Image URL" },
+];

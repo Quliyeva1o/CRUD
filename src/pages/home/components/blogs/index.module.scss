@@ -1,4 +1,3 @@
-
 .error {
     border: 1px solid #e74c3c;
 }
@@ -7,58 +6,59 @@
     color: #e74c3c;
     font-size: 14px;
 }
-.filters{
-    gap: 30px;
-    display: flex;
+
+.blog_heading {
+    margin-top: 60px;
+    align-items: center;
     width: 100%;
-    div{
-        margin: 0!important;
+    display: flex;
+    justify-content: space-between;
+    h3 {
+        color: #eb3e8c;
+        font-size: 28px;
     }
-   
+    .filters {
+        gap: 15px;
+        display: flex;
+
+        div {
+            margin: 0 !important;
+        }
+    }
 }
-.card_btns{
+
+.card_btns {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .blogs {
     display: grid;
-    grid-template-columns: auto auto auto auto;
-    @media (max-width: 1024px) {
-        grid-template-columns: auto auto auto;
-    }
-    @media (max-width: 768px) {
-        grid-template-columns: auto auto;
-    }
-    @media (max-width: 480px) {
-        grid-template-columns: auto;
-    }
-    gap: 20px;
+    gap: 60px;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 40px;
+    grid-template-columns: auto auto auto auto;
+  
 }
 .content {
-    padding: 15px;
+    padding: 25px;
 }
 .blog_card {
-    max-width: 250px;
+    max-width: 350px;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: transform 0.3s ease;
     justify-content: space-between;
     flex-direction: column;
     display: flex;
-    a{
+    a {
         text-decoration: none;
         color: #fff;
     }
-    h1 {
-        padding: 15px;
-    }
+
     div {
         padding: 15px;
     }
@@ -70,16 +70,25 @@
     }
 
     h1 {
+        padding: 15px;
         font-size: 16px;
         font-weight: 500;
     }
 
-    p {
-        font-size: 14px;
-        margin: 0 10px 10px 10px;
-    }
-
     &:hover {
         transform: translateY(-5px);
+    }
+}
+
+
+.blogs{
+    @media (max-width: 1024px) {
+        grid-template-columns: auto auto auto;
+    }
+    @media (max-width: 768px) {
+        grid-template-columns: auto auto !important;
+    }
+    @media (max-width: 480px) {
+        grid-template-columns: auto;
     }
 }

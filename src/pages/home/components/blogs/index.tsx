@@ -3,25 +3,27 @@ import Button from "../../../../components/button";
 import DeleteIcon from "../../../../components/deleteIcon";
 import Loader from "../../../../components/loader";
 import { Link } from "react-router-dom";
-import {
-  useGetAllBlogsQuery,
-  useDeleteBlogMutation,
-} from "../../../../redux/slices/apiSlice";
+import {useGetAllBlogsQuery, useDeleteBlogMutation} from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "../editBlog/index";
 import AddBlog from "../addBlog";
 import Input from "../../../../components/input";
+import Modal from "../../../../components/modal";
 
 const Blogs = () => {
   const { data: blogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
   const [deleteBlog] = useDeleteBlogMutation();
   const [editPostId, setEditPostId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
 
-  const handleDeleteBlog = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
+  // DELETE FUNCTION
+  const handleDeleteBlog = async () => {
+    if (selectedBlogId) {
       try {
-        await deleteBlog(id).unwrap();
+        setIsModalOpen(false);
+        await deleteBlog(selectedBlogId).unwrap();
         refetch();
       } catch (error) {
         console.error("Failed to delete blog", error);
@@ -30,10 +32,10 @@ const Blogs = () => {
     }
   };
 
+  // SEARCH FUNCTIONS
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
 
   const filteredBlogs = blogs.filter(
     (blog) =>
@@ -44,32 +46,33 @@ const Blogs = () => {
       blog.body.trim().toLowerCase().includes(searchQuery.trim().toLowerCase())
   );
 
+  // LOADINGS & ERRORS
   if (isLoading) return <Loader />;
   if (error) return <p>Error fetching blogs. Please try again later.</p>;
 
+  // COMPONENT
   return (
     <>
       <div className="container">
-        <div className={styles.filters}>
-          <Input
-            type="text"
-            name="search"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search Blog"
-          />
-          <AddBlog />
+        <div className={styles.blog_heading}>
+          <h3>Blogs</h3>
+          <div className={styles.filters}>
+            <Input
+              type="text"
+              name="search"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search Blog"
+            />
+            <AddBlog />
+          </div>
         </div>
         <div className={styles.blogs}>
           {filteredBlogs.length > 0 ? (
             filteredBlogs.map(({ id, img, title }) => (
               <div key={id} className={styles.blog_card}>
                 <img
-                  src={
-                    img
-                      ? img
-                      : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
-                  }
+                  src={ img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
                   alt={`Blog titled ${title}`}
                 />
                 <h1>{title}</h1>
@@ -77,13 +80,16 @@ const Blogs = () => {
                   <Button size="small" onClick={() => setEditPostId(id)}>
                     Rədaktə et
                   </Button>
-                  <Button size="small">
-                    <Link to={`blogs/${id}`}>Detail</Link>
-                  </Button>
+                  <Link to={`blogs/${id}`}>
+                    <Button size="small">Detail</Button>
+                  </Link>
                   <Button
                     color="transparent"
                     size="small"
-                    onClick={() => handleDeleteBlog(id)}
+                    onClick={() => {
+                      setSelectedBlogId(id);
+                      setIsModalOpen(true);
+                    }}
                   >
                     <DeleteIcon />
                   </Button>
@@ -103,6 +109,12 @@ const Blogs = () => {
             }}
           />
         )}
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDeleteBlog}
+          message="Are you sure you want to delete this blog?"
+        />
       </div>
     </>
   );

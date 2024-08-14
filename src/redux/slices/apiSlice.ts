@@ -25,7 +25,7 @@ export const apiService = createApi({
     updateBlog: builder.mutation<Blog, { id: string; changes: Partial<Blog> }>({
       query: ({ id, changes }) => ({
         url: `posts/${id}`,
-        method: 'PUT',
+        method: 'PATCH',
         body: changes,
       }),
     }),

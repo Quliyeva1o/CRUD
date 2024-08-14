@@ -1,39 +1,41 @@
 .inputWrapper {
-    position: relative;
-    margin-bottom: 1rem;
+  position: relative;
+  margin-bottom: 1.4rem;
+}
+
+.input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
+    outline: none;
   }
-  
-  .input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    
-    &:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
-      outline: none;
-    }
-  }
-  
-  .textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  .errorInput {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
-  }
-  
-  .errorMessage {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-    position: absolute;
-    bottom: -1.25rem;
-    left: 0;
-  }
-  
+}
+
+.textarea {
+  min-height: 120px;
+  resize: horizontal;
+}
+
+.errorInput {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  position: absolute;
+  bottom: -1.3rem;
+  left: 0;
+}
