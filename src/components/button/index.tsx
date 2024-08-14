@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./index.module.scss";
-import ButtonLoader from "../buttonLoader";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -25,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
       style={{ backgroundColor: color }}
       {...props}
     >
-      {loading ? <ButtonLoader /> : children }
+      {loading ? <span className={styles.buttonLoader}></span> : children}
     </button>
   );
 };

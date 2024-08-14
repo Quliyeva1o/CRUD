@@ -24,4 +24,13 @@
     font-size: 12px;
     padding:  5px 10px;
   }
-  
+  .buttonLoader{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
