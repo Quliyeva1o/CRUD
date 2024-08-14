@@ -1,5 +1,11 @@
 import styles from "./index.module.scss";
 
-const Loader = () => {return <span className={styles.loader}></span>};
+const Loader = () => {
+  return (
+    <div className={styles.loaderContainer}>
+      <span className={styles.loader}></span>
+    </div>
+  );
+};
 
 export default Loader;
