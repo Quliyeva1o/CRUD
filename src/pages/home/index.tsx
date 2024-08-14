@@ -3,10 +3,7 @@ import Button from "../../components/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
 import Loader from "../../components/loader";
 import { Link } from "react-router-dom";
-import {
-  useGetAllBlogsQuery,
-  useDeleteBlogMutation,
-} from "../../redux/slices/apiSlice";
+import {useGetAllBlogsQuery, useDeleteBlogMutation} from "../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
@@ -90,11 +87,7 @@ const Home = () => {
               filteredBlogs.reverse().map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={
-                      img
-                        ? img
-                        : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
-                    }
+                    src={img ? img: "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
                     alt={`Blog titled ${title}`}
                   />
                   <h1>{title}</h1>
@@ -126,8 +119,7 @@ const Home = () => {
             onClose={() => {
               setEditPostId(null);
               refetch();
-            }}
-          />
+            }}/>
         )}
         <Modal
           isOpen={deleteBlogId ? true : false}
