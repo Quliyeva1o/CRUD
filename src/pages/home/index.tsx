@@ -3,7 +3,7 @@ import Button from "../../components/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
 import Loader from "../../components/loader";
 import { Link } from "react-router-dom";
-import {useGetAllBlogsQuery, useDeleteBlogMutation} from "../../redux/slices/apiSlice";
+import { useGetAllBlogsQuery, useDeleteBlogMutation} from "../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
@@ -13,11 +13,12 @@ import Modal from "../../components/modal";
 const Home = () => {
   const { data: blogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
   const [deleteBlog] = useDeleteBlogMutation();
+
   //STATES
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editPostId, setEditPostId] = useState<string | null>(null);
   const [deleteBlogId, setDeleteBlogId] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{ visible: boolean; message: string; }>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{visible: boolean;message: string}>({ visible: false, message: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   // DELETE FUNCTION
@@ -25,10 +26,9 @@ const Home = () => {
     if (deleteBlogId) {
       setLoading(true);
       try {
+        setDeleteBlogId(null);
         await deleteBlog(deleteBlogId).unwrap();
         refetch();
-        setDeleteBlogId(null);
-
         // NOTIFICATION
         setNotification({
           visible: true,
@@ -80,14 +80,13 @@ const Home = () => {
           </div>
         </div>
         {loading || isLoading ? (
-          <Loader />
-        ) : (
+          <Loader />) : (
           <div className={styles.blogs}>
             {filteredBlogs.length > 0 ? (
               filteredBlogs.reverse().map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={img ? img: "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
+                    src={ img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
                     alt={`Blog titled ${title}`}
                   />
                   <h1>{title}</h1>
@@ -119,8 +118,10 @@ const Home = () => {
             onClose={() => {
               setEditPostId(null);
               refetch();
-            }}/>
+            }}
+          />
         )}
+
         <Modal
           isOpen={deleteBlogId ? true : false}
           onClose={() => setDeleteBlogId(null)}

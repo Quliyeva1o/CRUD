@@ -8,6 +8,7 @@ import Input from "../../components/input";
 import { CommentValues } from "../../types";
 import { commentValidationSchema } from "../../utils/validations";
 import Button from "../../components/button";
+import { commentFormFields } from "../../utils/formFields";
 
 const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,7 +67,7 @@ const Detail: React.FC = () => {
       <div className={styles.commentForm}>
         <h2>Leave a Comment</h2>
         <form onSubmit={formik.handleSubmit}>
-          {addCommentForm.map((input) => (
+          {commentFormFields.map((input) => (
             <Input
               key={input.name}
               type={input.type}
@@ -92,10 +93,3 @@ const Detail: React.FC = () => {
 };
 
 export default Detail;
-
-//FORMFIELDS
-const addCommentForm = [
-  { type: "textarea", name: "body", placeholder: "Your Comment" },
-  { type: "email", name: "email", placeholder: "Your Email" },
-  { type: "text", name: "name", placeholder: "Your Name" },
-];

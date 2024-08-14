@@ -7,6 +7,7 @@ import Input from "../../../../components/input";
 import Loader from "../../../../components/loader";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
+import { blogFormFields } from "../../../../utils/formFields";
 
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
   const { data: blog, error, isLoading, refetch } = useGetBlogQuery(postId);
@@ -47,13 +48,10 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
     <div className={styles.overlay}>
       <div
         className={styles.modal}
-        role="dialog"
-        aria-labelledby="modal-title"
-        aria-modal="true"
       >
-        <h2 id="modal-title">Edit Blog</h2>
+        <h2>Edit Blog</h2>
         <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
-          {formFields.map(({ type, name, placeholder }) => (
+          {blogFormFields.map(({ type, name, placeholder }) => (
             <Input
               key={name}
               type={type}
@@ -84,12 +82,6 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
 
 export default EditBlog;
 
-//FORMFIELDS
-const formFields = [
-  { type: "text", name: "title", placeholder: "Title" },
-  { type: "textarea", name: "body", placeholder: "Body" },
-  { type: "text", name: "img", placeholder: "Image URL" },
-];
 
 interface EditBlogProps {
   postId: string;
