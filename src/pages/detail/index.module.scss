@@ -1,66 +1,66 @@
 .detail {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+  padding: 20px;
+  max-width: 800px;
   
+  margin:25px auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  .detail h1 {
-    font-size: 25px;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  
-  .detail img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  .detail p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: #555;
-  }
-  
-  .comments {
-    margin-top: 30px;
-    padding: 15px;
-    background-color: #fff;
-    border-top: 2px solid #ddd;
-  }
-  
-  .comments h2 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .comment {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-  }
-  
-  .comment h3 {
-    font-size: 1.2em;
-    margin-bottom: 5px;
-    color: #333;
-  }
-  
-  .comment p strong {
-    color: #333;
-  }
-  
-  .comment p {
-    margin: 5px 0;
-    line-height: 1.5;
-    color: #666;
-  }
-  
+.detail h1 {
+  font-size: 25px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.detail img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.detail p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #555;
+}
+
+.comments {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #fff;
+  border-top: 2px solid #ddd;
+}
+
+.comments h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.comment {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  border-left: 4px solid #555;
+}
+
+.comment h3 {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.comment p strong {
+  color: #333;
+}
+
+.comment p {
+  margin: 5px 0;
+  line-height: 1.5;
+  color: #666;
+}

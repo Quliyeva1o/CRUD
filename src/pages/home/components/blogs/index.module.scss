@@ -98,3 +98,19 @@
         transform: translateY(-5px);
     }
 }
+
+.notification {
+    position: fixed;
+    top: 10px;
+    right: 0;
+    transform: translateX(-50%);
+    transition: all .4s;
+    background-color: #ffbbee;
+    border-bottom: 4px solid rgb(0, 216, 0);
+    color: #5c3586;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 16px;
+  }
+  

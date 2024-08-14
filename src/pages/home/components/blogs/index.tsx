@@ -3,7 +3,7 @@ import Button from "../../../../components/button";
 import DeleteIcon from "../../../../components/deleteIcon";
 import Loader from "../../../../components/loader";
 import { Link } from "react-router-dom";
-import {useGetAllBlogsQuery, useDeleteBlogMutation} from "../../../../redux/slices/apiSlice";
+import { useGetAllBlogsQuery, useDeleteBlogMutation } from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "../editBlog/index";
 import AddBlog from "../addBlog";
@@ -17,6 +17,10 @@ const Blogs = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: '',
+  });
 
   // DELETE FUNCTION
   const handleDeleteBlog = async () => {
@@ -25,6 +29,13 @@ const Blogs = () => {
         setIsModalOpen(false);
         await deleteBlog(selectedBlogId).unwrap();
         refetch();
+        setNotification({
+          visible: true,
+          message: 'Blog deleted successfully!',
+        });
+        setTimeout(() => {
+          setNotification({ visible: false, message: '' });
+        }, 3000); 
       } catch (error) {
         console.error("Failed to delete blog", error);
         alert("Failed to delete the blog. Please try again.");
@@ -73,7 +84,7 @@ const Blogs = () => {
             filteredBlogs.map(({ id, img, title }) => (
               <div key={id} className={styles.blog_card}>
                 <img
-                  src={ img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
+                  src={img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"}
                   alt={`Blog titled ${title}`}
                 />
                 <h1>{title}</h1>
@@ -116,6 +127,11 @@ const Blogs = () => {
           onConfirm={handleDeleteBlog}
           message="Are you sure you want to delete this blog?"
         />
+        {notification.visible && (
+          <div className={styles.notification}>
+            {notification.message}
+          </div>
+        )}
       </div>
     </>
   );
