@@ -13,9 +13,12 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-
+    h2 {
+        padding: 10px;
+    }
 
     .add_blog_form {
+        padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 25px;

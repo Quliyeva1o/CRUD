@@ -13,6 +13,9 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    @media (max-width: 600px) {
+        flex-direction: column;
+      }
     h3 {
         color: #eb3e8c;
         font-size: 28px;
@@ -20,6 +23,13 @@
     .filters {
         gap: 15px;
         display: flex;
+        @media(max-width:600px){
+            margin-top: 20px;
+
+        }
+        @media (max-width: 500px) {
+          flex-direction: column;
+        }
         div {
             margin: 0 !important;
         }
@@ -47,6 +57,7 @@
     }
     @media (max-width: 580px) {
         grid-template-columns: auto!important;
+        padding: 15px;
     }
 }
 .content {

@@ -44,7 +44,8 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
 
   //COMPONENT
   return (
-    <div
+   <div className={styles.overlay}>
+     <div
       className={styles.modal}
       role="dialog"
       aria-labelledby="modal-title"
@@ -75,6 +76,7 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
         </Button>
       </form>
     </div>
+   </div>
   );
 };
 
