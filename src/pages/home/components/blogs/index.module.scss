@@ -20,7 +20,6 @@
     .filters {
         gap: 15px;
         display: flex;
-
         div {
             margin: 0 !important;
         }
@@ -28,6 +27,7 @@
 }
 
 .card_btns {
+    gap: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,13 +39,21 @@
     justify-content: center;
     margin-top: 40px;
     grid-template-columns: auto auto auto auto;
-  
+    @media (max-width: 1024px) {
+        grid-template-columns: auto auto auto;
+    }
+    @media (max-width: 768px) {
+        grid-template-columns: auto auto !important;
+    }
+    @media (max-width: 580px) {
+        grid-template-columns: auto!important;
+    }
 }
 .content {
     padding: 25px;
 }
 .blog_card {
-    max-width: 350px;
+    max-width: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
@@ -77,18 +85,5 @@
 
     &:hover {
         transform: translateY(-5px);
-    }
-}
-
-
-.blogs{
-    @media (max-width: 1024px) {
-        grid-template-columns: auto auto auto;
-    }
-    @media (max-width: 768px) {
-        grid-template-columns: auto auto !important;
-    }
-    @media (max-width: 480px) {
-        grid-template-columns: auto;
     }
 }

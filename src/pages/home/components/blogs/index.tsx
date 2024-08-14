@@ -67,6 +67,7 @@ const Blogs = () => {
             <AddBlog />
           </div>
         </div>
+        
         <div className={styles.blogs}>
           {filteredBlogs.length > 0 ? (
             filteredBlogs.map(({ id, img, title }) => (
