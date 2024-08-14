@@ -9,7 +9,7 @@ export const blogValidationSchema = Yup.object({
 export const commentValidationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   email: Yup.string()
-    .email("Invalid email address")
+    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address")
     .required("Email is required"),
   body: Yup.string().required("Comment is required"),
 });

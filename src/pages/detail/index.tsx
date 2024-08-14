@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import {useGetBlogQuery,useCreateCommentMutation} from "../../redux/slices/apiSlice";
+import {useGetBlogQuery, useCreateCommentMutation} from "../../redux/slices/apiSlice";
 import Loader from "../../components/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
@@ -14,6 +14,7 @@ const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: blog, error, isLoading, refetch } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
+  const [notification, setNotification] = useState<{ visible: boolean; message: string;}>({ visible: false, message: "" });
 
   ///FORMIK
   const formik = useFormik<CommentValues>({
@@ -28,6 +29,14 @@ const Detail: React.FC = () => {
         await addComment({ ...values, postId: blog?.id }).unwrap();
         refetch();
         resetForm();
+        // NOTIFICATION
+        setNotification({
+          visible: true,
+          message: "Blog deleted successfully!",
+        });
+        setTimeout(() => {
+          setNotification({ visible: false, message: "" });
+        }, 3000);
       } catch (err) {
         console.error("Failed to add comment:", err);
       }
@@ -44,7 +53,10 @@ const Detail: React.FC = () => {
     <div className={styles.detail}>
       <h1>{blog.title}</h1>
       <img
-        src={  blog.img || "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
+        src={
+          blog.img ||
+          "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
+        }
         alt={blog.title}
       />
       <p>{blog.body}</p>
@@ -88,6 +100,10 @@ const Detail: React.FC = () => {
           </Button>
         </form>
       </div>
+
+      {notification.visible && (
+        <div className={styles.notification}>{notification.message}</div>
+      )}
     </div>
   );
 };
