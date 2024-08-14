@@ -31,7 +31,7 @@ const Input: React.FC<InputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`${styles.input} ${error ? styles.errorInput : ''}`}
+          className={`${styles.textarea} ${error ? styles.errorInput : ''}`}
           aria-invalid={error ? 'true' : 'false'}
         />
       ) : (

@@ -10,6 +10,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+
   transition:
     border-color 0.3s,
     box-shadow 0.3s;
@@ -22,7 +23,23 @@
 }
 
 .textarea {
-  min-height: 120px;
+  resize: vertical;
+  min-height: 100px;
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
+    outline: none;
+  }
 }
 
 .errorInput {
