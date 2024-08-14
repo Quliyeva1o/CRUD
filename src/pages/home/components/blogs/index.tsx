@@ -3,7 +3,7 @@ import Button from "../../../../components/button";
 import DeleteIcon from "../../../../components/deleteIcon";
 import Loader from "../../../../components/loader";
 import { Link } from "react-router-dom";
-import {useGetAllBlogsQuery,useDeleteBlogMutation} from "../../../../redux/slices/apiSlice";
+import { useGetAllBlogsQuery, useDeleteBlogMutation} from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "../editBlog/index";
 import AddBlog from "../addBlog";
@@ -11,13 +11,13 @@ import Input from "../../../../components/input";
 import Modal from "../../../../components/modal";
 
 const Blogs = () => {
-  const { data: blogs = [], error, refetch } = useGetAllBlogsQuery();
+  const { data: blogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
   const [deleteBlog] = useDeleteBlogMutation();
   const [editPostId, setEditPostId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{visible: boolean;message: string;}>({visible: false,message: ""});
+  const [notification, setNotification] = useState<{visible: boolean; message: string}>({ visible: false, message: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   // DELETE FUNCTION
@@ -77,7 +77,7 @@ const Blogs = () => {
             <AddBlog />
           </div>
         </div>
-        {loading ? (
+        {loading || isLoading ? (
           <Loader />
         ) : (
           <div className={styles.blogs}>
@@ -85,11 +85,7 @@ const Blogs = () => {
               filteredBlogs.reverse().map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={
-                      img
-                        ? img
-                        : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
-                    }
+                    src={ img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
                     alt={`Blog titled ${title}`}
                   />
                   <h1>{title}</h1>

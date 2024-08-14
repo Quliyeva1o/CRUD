@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import { useCreateBlogMutation,useGetAllBlogsQuery} from "../../../../redux/slices/apiSlice";
+import {
+  useCreateBlogMutation,
+  useGetAllBlogsQuery,
+} from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import Button from "../../../../components/button";
 import Input from "../../../../components/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
-
-
+import ButtonLoader from "../../../../components/buttonLoader";
 
 const AddBlog: React.FC = () => {
   const { refetch } = useGetAllBlogsQuery();
   const [createBlog] = useCreateBlogMutation();
   const [showModal, setShowModal] = useState(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
 
   //FORMIK
   const formik = useFormik<BlogFormValues>({
@@ -22,21 +24,23 @@ const AddBlog: React.FC = () => {
       body: "",
       img: "",
     },
-    validationSchema:blogValidationSchema,
+    validationSchema: blogValidationSchema,
     onSubmit: (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
+      setLoading(true);
       createBlog(values)
         .then(() => {
           refetch();
           resetForm();
           setShowModal(false);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           alert("Failed to create blog. Please try again.");
+          setLoading(false);
         });
     },
   });
-
 
   //COMPONENT
   return (
@@ -50,8 +54,8 @@ const AddBlog: React.FC = () => {
           className={styles.modal}
           role="dialog"
           aria-labelledby="modal-title"
-          aria-modal="true">
-
+          aria-modal="true"
+        >
           <h2 id="modal-title">Create a new blog</h2>
           <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
             {formFields.map(({ type, name, placeholder }) => (
@@ -72,12 +76,13 @@ const AddBlog: React.FC = () => {
             ))}
 
             <Button type="submit" color="#eb3e8c">
-              Create Blog
+              {loading ? <ButtonLoader /> : "Create Blog"}
             </Button>
             <Button
               type="button"
               onClick={() => setShowModal(false)}
-              color="#dc3545">
+              color="#dc3545"
+            >
               Close
             </Button>
           </form>
@@ -88,7 +93,6 @@ const AddBlog: React.FC = () => {
 };
 
 export default AddBlog;
-
 
 //FORMFIELDS
 const formFields = [
