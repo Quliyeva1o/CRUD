@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {useGetBlogQuery, useCreateCommentMutation} from "../../redux/slices/apiSlice";
+import {
+  useGetBlogQuery,
+  useCreateCommentMutation,
+} from "../../redux/slices/apiSlice";
 import Loader from "../../components/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
@@ -14,24 +17,25 @@ const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: blog, error, isLoading } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
-  const [notification, setNotification] = useState<{visible: boolean; message: string;}>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{
+    visible: boolean;
+    message: string;
+  }>({ visible: false, message: "" });
   const [comments, setComments] = useState<any>([]);
 
   useEffect(() => {
     setComments(blog?.comments);
   }, [blog]);
 
-
   // FORMİK
-  const formik = useFormik<CommentValues>({
+
+  const formik = useFormik({
     initialValues: {
       name: "",
       email: "",
       body: "",
     },
     validationSchema: commentValidationSchema,
-    validateOnChange: true,
-    validateOnBlur: false,
     onSubmit: async (values, { resetForm }: FormikHelpers<CommentValues>) => {
       try {
         await addComment({ ...values, postId: blog?.id }).unwrap();
@@ -52,7 +56,35 @@ const Detail: React.FC = () => {
     },
   });
 
-  
+  // const formik = useFormik<CommentValues>({
+  //   initialValues: {
+  //     name: "",
+  //     email: "",
+  //     body: "",
+  //   },
+  //   validateOnChange: true,
+  //   validationSchema: commentValidationSchema,
+
+  //   onSubmit: async (values, { resetForm }: FormikHelpers<CommentValues>) => {
+  //     try {
+  //       await addComment({ ...values, postId: blog?.id }).unwrap();
+  //       setComments([...comments, values]);
+  //       resetForm();
+
+  //       // NOTIFICATION
+  //       setNotification({
+  //         visible: true,
+  //         message: "Comment added successfully!",
+  //       });
+  //       setTimeout(() => {
+  //         setNotification({ visible: false, message: "" });
+  //       }, 3000);
+  //     } catch (err) {
+  //       console.error("Failed to add comment:", err);
+  //     }
+  //   },
+  // });
+
   // LOADINGS & ERRORS
   if (isLoading) return <Loader />;
   if (error) return <p>Error fetching blog details. Please try again later.</p>;
@@ -89,9 +121,9 @@ const Detail: React.FC = () => {
       <div className={styles.commentForm}>
         <h2>Leave a Comment</h2>
         <form onSubmit={formik.handleSubmit}>
-          {commentFormFields.map((input) => (
+          {commentFormFields?.map((input, idx) => (
             <Input
-              key={input.name}
+              key={idx}
               type={input.type}
               name={input.name}
               placeholder={input.placeholder}
@@ -99,12 +131,13 @@ const Detail: React.FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={
-                Boolean(formik.errors[input.name as keyof CommentValues]) &&
+                Boolean(formik.errors[input.name as keyof CommentValues]) ||
                 formik.touched[input.name as keyof CommentValues]
               }
               errorMessage={formik.errors[input.name as keyof CommentValues]}
             />
           ))}
+
           <Button
             type="submit"
             disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}

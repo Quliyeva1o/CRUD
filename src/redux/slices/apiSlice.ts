@@ -8,6 +8,7 @@ export const apiService = createApi({
   endpoints: (builder) => ({
     getAllBlogs: builder.query<Blog[], void>({
       query: () => 'posts',
+      
     }),
 
     getBlog: builder.query<Blog, string>({

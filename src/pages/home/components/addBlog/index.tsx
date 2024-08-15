@@ -23,9 +23,13 @@ const AddBlog: React.FC = () => {
     initialValues: {
       title: "",
       body: "",
-      img: "", },
+      img: "",
+    },
     validationSchema: blogValidationSchema,
-    onSubmit: async (values, { resetForm, setSubmitting }: FormikHelpers<BlogFormValues>) => {
+    onSubmit: async (
+      values,
+      { resetForm, setSubmitting }: FormikHelpers<BlogFormValues>
+    ) => {
       try {
         setSubmitting(true);
         const newBlog = { ...values, id: nanoid() };
@@ -49,9 +53,7 @@ const AddBlog: React.FC = () => {
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <h2>Create a new blog</h2>
-        <form
-          onSubmit={formik.handleSubmit}
-          className={styles.add_blog_form}>
+        <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
           {blogFormFields.map(({ type, name, placeholder }) => (
             <Input
               key={name}
