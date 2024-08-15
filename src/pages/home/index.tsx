@@ -8,10 +8,10 @@ import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
 import Input from "../../components/input";
-import Modal from "../../components/modal";
 import { setBlogs } from "../../redux/slices/blogsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import ConfirmModal from "../../components/confirmModal";
 
 const Home = () => {
   const { data: myBlogs = [], error, isLoading } = useGetAllBlogsQuery();
@@ -97,11 +97,7 @@ const Home = () => {
               filteredBlogs.map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={
-                      img
-                        ? img
-                        : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
-                    }
+                    src={img? img: "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"}
                     alt={`Blog titled ${title}`}
                   />
                   <h1>{title}</h1>
@@ -142,7 +138,7 @@ const Home = () => {
             }}
           />
         )}
-        <Modal
+        <ConfirmModal
           isOpen={Boolean(deleteBlogId)}
           onClose={() => setDeleteBlogId(null)}
           onConfirm={handleDeleteBlog}

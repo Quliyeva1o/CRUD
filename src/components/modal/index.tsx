@@ -1,25 +1,22 @@
 import React from "react";
-import styles from "./index.module.scss";
-import Button from "../button";
+import styles from "./index.module.scss"; 
 
 interface ModalProps {
-  isOpen: boolean;
+  show: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  message: string;
+  children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, message }) => {
-  if (!isOpen) return null;
+const Modal: React.FC<ModalProps> = ({ show, onClose, children }) => {
+  if (!show) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <p>{message}</p>
-        <div className={styles.modalActions}>
-          <Button onClick={onConfirm}>Yes</Button>
-          <Button onClick={onClose}>No</Button>
-        </div>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <button className={styles.closeButton} onClick={onClose}>
+          &times;
+        </button>
+        {children}
       </div>
     </div>
   );

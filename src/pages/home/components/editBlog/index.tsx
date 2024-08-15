@@ -9,6 +9,18 @@ import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+import Modal from "../../../../components/modal";
+
+interface EditBlogProps {
+  postId: string;
+  onClose: () => void;
+  onUpdate: (updatedBlog: {
+    id: string;
+    title: string;
+    body: string;
+    img?: string;
+  }) => void;
+}
 
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
   const [updateBlog] = useUpdateBlogMutation();
@@ -17,10 +29,9 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
   const { blogs } = useSelector((state: RootState) => state.blogs);
 
   useEffect(() => {
-    setBlog(blogs.find((x) => x.id == postId));
-  }, [blogs]);
+    setBlog(blogs.find((x) => x.id === postId));
+  }, [blogs, postId]);
 
-  // FORMİK
   const formik = useFormik<BlogFormValues>({
     initialValues: {
       title: blog?.title || "",
@@ -47,49 +58,35 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
     },
   });
 
-  // COMPONENT
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <h2>Edit Blog</h2>
-        <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
-          {blogFormFields.map(({ type, name, placeholder }) => (
-            <Input
-              key={name}
-              type={type}
-              name={name}
-              placeholder={placeholder}
-              value={formik.values[name as keyof BlogFormValues]}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched[name as keyof BlogFormValues] &&
-                Boolean(formik.errors[name as keyof BlogFormValues])
-              }
-              errorMessage={formik.errors[name as keyof BlogFormValues]}
-            />
-          ))}
-          <Button type="submit" color="#eb3e8c" loading={loading}>
-            Save Changes
-          </Button>
-          <Button type="button" onClick={onClose} color="#dc3545">
-            Close
-          </Button>
-        </form>
-      </div>
-    </div>
+    <Modal show={true} onClose={onClose}>
+      <h2>Edit Blog</h2>
+      <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
+        {blogFormFields.map(({ type, name, placeholder }) => (
+          <Input
+            key={name}
+            type={type}
+            name={name}
+            placeholder={placeholder}
+            value={formik.values[name as keyof BlogFormValues]}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched[name as keyof BlogFormValues] &&
+              Boolean(formik.errors[name as keyof BlogFormValues])
+            }
+            errorMessage={formik.errors[name as keyof BlogFormValues]}
+          />
+        ))}
+        <Button type="submit" color="#eb3e8c" loading={loading}>
+          Save Changes
+        </Button>
+        <Button type="button" onClick={onClose} color="#dc3545">
+          Close
+        </Button>
+      </form>
+    </Modal>
   );
 };
 
 export default EditBlog;
-
-interface EditBlogProps {
-  postId: string;
-  onClose: () => void;
-  onUpdate: (updatedBlog: {
-    id: string;
-    title: string;
-    body: string;
-    img?: string;
-  }) => void;
-}
