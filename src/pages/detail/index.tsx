@@ -131,8 +131,7 @@ const Detail: React.FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={
-                Boolean(formik.errors[input.name as keyof CommentValues]) ||
-                formik.touched[input.name as keyof CommentValues]
+                Boolean(formik.errors[input.name as keyof CommentValues]) 
               }
               errorMessage={formik.errors[input.name as keyof CommentValues]}
             />
