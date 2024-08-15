@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {useGetBlogQuery, useCreateCommentMutation} from "../../redux/slices/apiSlice";
+import {
+  useGetBlogQuery,
+  useCreateCommentMutation,
+} from "../../redux/slices/apiSlice";
 import Loader from "../../components/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
@@ -14,9 +17,16 @@ const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: blog, error, isLoading, refetch } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
-  const [notification, setNotification] = useState<{ visible: boolean; message: string;}>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{
+    visible: boolean;
+    message: string;
+  }>({ visible: false, message: "" });
+  const [comments, setComments] = useState<any>([]);
 
-  ///FORMIK
+  useEffect(() => {
+    setComments(blog?.comments);
+  }, [blog]);
+  // FORMİK
   const formik = useFormik<CommentValues>({
     initialValues: {
       name: "",
@@ -24,15 +34,18 @@ const Detail: React.FC = () => {
       body: "",
     },
     validationSchema: commentValidationSchema,
+    validateOnChange: true,
+    validateOnBlur: false,
     onSubmit: async (values, { resetForm }: FormikHelpers<CommentValues>) => {
       try {
         await addComment({ ...values, postId: blog?.id }).unwrap();
-        refetch();
+        setComments([...comments, values]);
         resetForm();
+
         // NOTIFICATION
         setNotification({
           visible: true,
-          message: "Blog deleted successfully!",
+          message: "Comment added successfully!",
         });
         setTimeout(() => {
           setNotification({ visible: false, message: "" });
@@ -43,12 +56,12 @@ const Detail: React.FC = () => {
     },
   });
 
-  //LOADINGS ERRORS
+  // LOADINGS & ERRORS
   if (isLoading) return <Loader />;
   if (error) return <p>Error fetching blog details. Please try again later.</p>;
   if (!blog) return <p>No blog found.</p>;
 
-  //RETURN
+  // RETURN
   return (
     <div className={styles.detail}>
       <h1>{blog.title}</h1>
@@ -61,11 +74,11 @@ const Detail: React.FC = () => {
       />
       <p>{blog.body}</p>
 
-      {blog.comments.length > 0 && (
+      {comments?.length > 0 && (
         <div className={styles.comments}>
           <h2>Comments</h2>
-          {blog.comments.map((comment) => (
-            <div key={comment.id} className={styles.comment}>
+          {comments.map((comment: any, idx: number) => (
+            <div key={idx} className={styles.comment}>
               <h3>{comment.name}</h3>
               <p>
                 <strong>Email:</strong> {comment.email}
@@ -89,13 +102,16 @@ const Detail: React.FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={
-                formik.touched[input.name as keyof CommentValues] &&
-                Boolean(formik.errors[input.name as keyof CommentValues])
+                Boolean(formik.errors[input.name as keyof CommentValues]) &&
+                formik.touched[input.name as keyof CommentValues]
               }
               errorMessage={formik.errors[input.name as keyof CommentValues]}
             />
           ))}
-          <Button type="submit" disabled={formik.isSubmitting}>
+          <Button
+            type="submit"
+            disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
+          >
             {formik.isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </form>

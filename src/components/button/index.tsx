@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: string;
   size?: "small" | "medium" | "large";
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,13 +16,15 @@ const Button: React.FC<ButtonProps> = ({
   color = "#eb3e8c",
   size = "medium",
   loading = false,
+  disabled = false,
   ...props
 }) => {
   return (
     <button
       onClick={onClick}
       className={`${styles.button} ${styles[size]}`}
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: disabled ? "#c998ae" : color }}
+      disabled={disabled}
       {...props}
     >
       {loading ? <span className={styles.buttonLoader}></span> : children}

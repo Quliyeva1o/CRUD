@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import {useUpdateBlogMutation , useGetBlogQuery} from "../../../../redux/slices/apiSlice";
+import { useUpdateBlogMutation } from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import Button from "../../../../components/button";
 import Input from "../../../../components/input";
-import Loader from "../../../../components/loader";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
-
-const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
-  const { data: blog, error, isLoading, refetch } = useGetBlogQuery(postId);
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
+const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
   const [updateBlog] = useUpdateBlogMutation();
+  const [blog, setBlog] = useState<{ id: string; img?: string; title: string; body: string } | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const { blogs } = useSelector((state: RootState) => state.blogs);
 
-  //FORMIK
+  useEffect(() => {
+    setBlog(blogs.find((x) => x.id == postId));
+  }, [blogs]);
+
+  // FORMİK
   const formik = useFormik<BlogFormValues>({
     initialValues: {
       title: blog?.title || "",
@@ -26,29 +31,25 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
     onSubmit: async (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
       setLoading(true);
       try {
-        await updateBlog({ id: postId, changes: values }).unwrap();
+        const updatedBlog = await updateBlog({
+          id: postId,
+          changes: values,
+        }).unwrap();
         resetForm();
+        onUpdate(updatedBlog);
         onClose();
-        refetch().then(() => {
-          setLoading(false);
-        });
       } catch (err) {
         console.log(err);
+      } finally {
         setLoading(false);
       }
     },
   });
 
-  //LOADING && ERROR
-  if (isLoading) return <Loader />;
-  if (error) return <p>Error fetching blog. Please try again later.</p>;
-
-  //COMPONENT
+  // COMPONENT
   return (
     <div className={styles.overlay}>
-      <div
-        className={styles.modal}
-      >
+      <div className={styles.modal}>
         <h2>Edit Blog</h2>
         <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
           {blogFormFields.map(({ type, name, placeholder }) => (
@@ -67,7 +68,6 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
               errorMessage={formik.errors[name as keyof BlogFormValues]}
             />
           ))}
-
           <Button type="submit" color="#eb3e8c" loading={loading}>
             Save Changes
           </Button>
@@ -82,8 +82,13 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
 
 export default EditBlog;
 
-
 interface EditBlogProps {
   postId: string;
   onClose: () => void;
+  onUpdate: (updatedBlog: {
+    id: string;
+    title: string;
+    body: string;
+    img?: string;
+  }) => void;
 }

@@ -1,24 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
 import Loader from "../../components/loader";
 import { Link } from "react-router-dom";
-import { useGetAllBlogsQuery, useDeleteBlogMutation} from "../../redux/slices/apiSlice";
+import {
+  useGetAllBlogsQuery,
+  useDeleteBlogMutation,
+} from "../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
 import Input from "../../components/input";
 import Modal from "../../components/modal";
+import { setBlogs } from "../../redux/slices/blogsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const Home = () => {
-  const { data: blogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
+  const { data: myBlogs = [], error, isLoading } = useGetAllBlogsQuery();
   const [deleteBlog] = useDeleteBlogMutation();
+  const { blogs } = useSelector((state: RootState) => state.blogs);
+  const dispatch = useDispatch();
 
-  //STATES
+  // STATES
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredBlogs, setFilteredBlogs] = useState<Array<{ id: string; img?: string; title: string; body: string }>>([]);
   const [editPostId, setEditPostId] = useState<string | null>(null);
   const [deleteBlogId, setDeleteBlogId] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{visible: boolean;message: string}>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{
+    visible: boolean;
+    message: string;
+  }>({ visible: false, message: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   // DELETE FUNCTION
@@ -26,43 +38,47 @@ const Home = () => {
     if (deleteBlogId) {
       setLoading(true);
       try {
-        setDeleteBlogId(null);
         await deleteBlog(deleteBlogId).unwrap();
-        refetch();
-        // NOTIFICATION
+        dispatch(setBlogs(blogs.filter((blog) => blog.id !== deleteBlogId)));
         setNotification({
           visible: true,
           message: "Blog deleted successfully!",
         });
-        setLoading(false);
-        setTimeout(() => {
-          setNotification({ visible: false, message: "" });
-        }, 3000);
       } catch (error) {
-        setLoading(false);
         console.error("Failed to delete blog", error);
+      } finally {
+        setDeleteBlogId(null);
+
+        setLoading(false);
       }
     }
   };
 
-  // SEARCH FUNCTIONS
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
+  // SEARCH FUNCTION TO FILTER BLOGS
+  useEffect(() => {
+    const getRegex = (query: string) => {
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(escapedQuery, "i");
+    };
 
-  const filteredBlogs = blogs.filter(
-    (blog) =>
-      blog.title
-        .trim()
-        .toLowerCase()
-        .includes(searchQuery.trim().toLowerCase()) ||
-      blog.body.trim().toLowerCase().includes(searchQuery.trim().toLowerCase())
-  );
+    const regex = getRegex(searchQuery);
+    const filtered = blogs.filter(
+      (blog) => regex.test(blog.title) || regex.test(blog.body)
+    );
+
+    setFilteredBlogs(filtered.reverse());
+  }, [searchQuery, blogs]);
+
+  // EFFECT HOOK TO UPDATE BLOGS
+  useEffect(() => {
+    if (JSON.stringify(myBlogs) !== JSON.stringify(blogs)) {
+      dispatch(setBlogs(myBlogs));
+    }
+  }, [myBlogs]);
 
   // LOADINGS & ERRORS
   if (error) return <p>Error fetching blogs. Please try again later.</p>;
 
-  // COMPONENT
   return (
     <>
       <div className="container">
@@ -73,20 +89,25 @@ const Home = () => {
               type="text"
               name="search"
               value={searchQuery}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Blog"
             />
             <AddBlog />
           </div>
         </div>
         {loading || isLoading ? (
-          <Loader />) : (
+          <Loader />
+        ) : (
           <div className={styles.blogs}>
             {filteredBlogs.length > 0 ? (
-              filteredBlogs.reverse().map(({ id, img, title }) => (
+              filteredBlogs.map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={ img ? img : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg" }
+                    src={
+                      img
+                        ? img
+                        : "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
+                    }
                     alt={`Blog titled ${title}`}
                   />
                   <h1>{title}</h1>
@@ -115,15 +136,20 @@ const Home = () => {
         {editPostId && (
           <EditBlog
             postId={editPostId}
-            onClose={() => {
-              setEditPostId(null);
-              refetch();
+            onClose={() => setEditPostId(null)}
+            onUpdate={(updatedBlog) => {
+              dispatch(
+                setBlogs(
+                  blogs.map((blog) =>
+                    blog.id === updatedBlog.id ? updatedBlog : blog
+                  )
+                )
+              );
             }}
           />
         )}
-
         <Modal
-          isOpen={deleteBlogId ? true : false}
+          isOpen={Boolean(deleteBlogId)}
           onClose={() => setDeleteBlogId(null)}
           onConfirm={handleDeleteBlog}
           message="Are you sure you want to delete this blog?"

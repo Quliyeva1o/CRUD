@@ -9,11 +9,11 @@ export interface Comment {
 }
 
 export interface Blog {
-  comments: Comment[];
+  comments?: Comment[];
   id: string; 
   title: string;
   body: string;
-  img: string;
+  img?: string;
 }
 
 interface BlogState {

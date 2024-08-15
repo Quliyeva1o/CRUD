@@ -50,6 +50,7 @@ const AddBlog: React.FC = () => {
       </Button>
 
       {showModal && (
+    <div className={styles.overlay}>
         <div
           className={styles.modal}
         >
@@ -83,6 +84,7 @@ const AddBlog: React.FC = () => {
             </Button>
           </form>
         </div>
+    </div>
       )}
     </>
   );
