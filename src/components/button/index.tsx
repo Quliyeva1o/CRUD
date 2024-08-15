@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`${styles.button} ${styles[size]}`}
+      className={`${styles.customBtn} ${styles[size]}`}
       style={{ backgroundColor: disabled ? "#c998ae" : color }}
       disabled={disabled}
       {...props}

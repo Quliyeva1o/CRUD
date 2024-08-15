@@ -52,7 +52,7 @@ const AddBlog: React.FC = () => {
       </Button>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <h2>Create a new blog</h2>
+        <h2 className={styles.modalHeading}>Create a new blog</h2>
         <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
           {blogFormFields.map(({ type, name, placeholder }) => (
             <Input

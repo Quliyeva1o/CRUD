@@ -14,7 +14,8 @@ import Input from "../../components/input";
 import { setBlogs } from "../../redux/slices/blogsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import ConfirmModal from "../../components/confirmModal";
+import Modal from "../../components/modal";
+
 const Home = () => {
   const {
     data: myBlogs = [],
@@ -55,7 +56,6 @@ const Home = () => {
         console.error("Failed to delete blog", error);
       } finally {
         setDeleteBlogId(null);
-
         setLoading(false);
       }
     }
@@ -117,27 +117,31 @@ const Home = () => {
               filteredBlogs.map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={img? img: "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"}
+                    src={
+                      img
+                        ? img
+                        : "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"
+                    }
                     alt={`Blog titled ${title}`}
                   />
-                <div className={styles.textContent}>
-                <h1>{title}</h1>
-                  <div className={styles.card_btns}>
-                    <Button size="small" onClick={() => setEditPostId(id)}>
-                      Edit
-                    </Button>
-                    <Link to={`blogs/${id}`}>
-                      <Button size="small">Detail</Button>
-                    </Link>
-                    <Button
-                      color="transparent"
-                      size="small"
-                      onClick={() => setDeleteBlogId(id)}
-                    >
-                      <DeleteIcon />
-                    </Button>
+                  <div className={styles.textContent}>
+                    <h1>{title}</h1>
+                    <div className={styles.card_btns}>
+                      <Button size="small" onClick={() => setEditPostId(id)}>
+                        Edit
+                      </Button>
+                      <Link to={`blogs/${id}`}>
+                        <Button size="small">Detail</Button>
+                      </Link>
+                      <Button
+                        color="transparent"
+                        size="small"
+                        onClick={() => setDeleteBlogId(id)}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </div>
                   </div>
-                </div>
                 </div>
               ))
             ) : (
@@ -160,12 +164,18 @@ const Home = () => {
             }}
           />
         )}
-        <ConfirmModal
-          isOpen={Boolean(deleteBlogId)}
+        <Modal
+          show={Boolean(deleteBlogId)}
           onClose={() => setDeleteBlogId(null)}
-          onConfirm={handleDeleteBlog}
-          message="Are you sure you want to delete this blog?"
-        />
+        >
+          <p className={styles.modalText}>
+            Are you sure you want to delete this blog?
+          </p>
+          <div className={styles.modalActions}>
+            <Button onClick={handleDeleteBlog}>Yes</Button>
+            <Button onClick={() => setDeleteBlogId(null)}>No</Button>
+          </div>
+        </Modal>
         {notification.visible && (
           <div className={styles.notification}>{notification.message}</div>
         )}
