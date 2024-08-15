@@ -3,10 +3,7 @@ import Button from "../../components/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
 import Loader from "../../components/loader";
 import { Link } from "react-router-dom";
-import {
-  useGetAllBlogsQuery,
-  useDeleteBlogMutation,
-} from "../../redux/slices/apiSlice";
+import {useGetAllBlogsQuery,useDeleteBlogMutation} from "../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
@@ -27,10 +24,7 @@ const Home = () => {
   const [filteredBlogs, setFilteredBlogs] = useState<Array<{ id: string; img?: string; title: string; body: string }>>([]);
   const [editPostId, setEditPostId] = useState<string | null>(null);
   const [deleteBlogId, setDeleteBlogId] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{
-    visible: boolean;
-    message: string;
-  }>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{ visible: boolean;message: string;}>({ visible: false, message: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   // DELETE FUNCTION

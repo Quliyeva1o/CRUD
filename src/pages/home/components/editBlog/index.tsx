@@ -9,6 +9,7 @@ import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
   const [updateBlog] = useUpdateBlogMutation();
   const [blog, setBlog] = useState<{ id: string; img?: string; title: string; body: string } | undefined>(undefined);

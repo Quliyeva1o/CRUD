@@ -2,6 +2,7 @@ export interface BlogFormValues {
   title: string;
   body: string;
   img: string;
+  id?:string
 }
 
 export interface CommentValues {

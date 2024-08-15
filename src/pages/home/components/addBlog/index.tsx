@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import {
-  useCreateBlogMutation,
-  useGetAllBlogsQuery,
-} from "../../../../redux/slices/apiSlice";
+import { useCreateBlogMutation } from "../../../../redux/slices/apiSlice";
 import styles from "./index.module.scss";
 import Button from "../../../../components/button";
 import Input from "../../../../components/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
+import { nanoid } from "@reduxjs/toolkit";
+import { RootState } from "../../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setBlogs } from "../../../../redux/slices/blogsSlice";
 
 const AddBlog: React.FC = () => {
-  const { refetch } = useGetAllBlogsQuery();
   const [createBlog] = useCreateBlogMutation();
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { blogs } = useSelector((state: RootState) => state.blogs);
 
-  //FORMIK
   const formik = useFormik<BlogFormValues>({
     initialValues: {
       title: "",
@@ -25,24 +25,22 @@ const AddBlog: React.FC = () => {
       img: "",
     },
     validationSchema: blogValidationSchema,
-    onSubmit: (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
-      setLoading(true);
-      createBlog(values)
-        .then(() => {
-          refetch();
-          resetForm();
-          setShowModal(false);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Failed to create blog. Please try again.");
-          setLoading(false);
-        });
+    onSubmit: async (values, { resetForm, setSubmitting }: FormikHelpers<BlogFormValues>) => {
+      try {
+        setSubmitting(true);
+        const newBlog = { ...values, id: nanoid() };
+        dispatch(setBlogs([...blogs, newBlog]));
+        await createBlog(newBlog).unwrap();
+        resetForm();
+        setShowModal(false);
+      } catch (err) {
+        console.error("Failed to create blog:", err);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
-  //COMPONENT
   return (
     <>
       <Button onClick={() => setShowModal(true)} color="#eb3e8c">
@@ -50,45 +48,45 @@ const AddBlog: React.FC = () => {
       </Button>
 
       {showModal && (
-    <div className={styles.overlay}>
-        <div
-          className={styles.modal}
-        >
-          <h2>Create a new blog</h2>
-          <form onSubmit={formik.handleSubmit} className={styles.add_blog_form}>
-            {blogFormFields.map(({ type, name, placeholder }) => (
-              <Input
-                key={name}
-                type={type}
-                name={name}
-                placeholder={placeholder}
-                value={formik.values[name as keyof BlogFormValues]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={
-                  formik.touched[name as keyof BlogFormValues] &&
-                  Boolean(formik.errors[name as keyof BlogFormValues])
-                }
-                errorMessage={formik.errors[name as keyof BlogFormValues]}
-              />
-            ))}
-
-            <Button type="submit" color="#eb3e8c" loading={loading}>
-              Create Blog
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setShowModal(false)}
-              color="#dc3545">
-              Close
-            </Button>
-          </form>
+        <div className={styles.overlay}>
+          <div className={styles.modal}>
+            <h2>Create a new blog</h2>
+            <form
+              onSubmit={formik.handleSubmit}
+              className={styles.add_blog_form}
+            >
+              {blogFormFields.map(({ type, name, placeholder }) => (
+                <Input
+                  key={name}
+                  type={type}
+                  name={name}
+                  placeholder={placeholder}
+                  value={formik.values[name as keyof BlogFormValues]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched[name as keyof BlogFormValues] &&
+                    Boolean(formik.errors[name as keyof BlogFormValues])
+                  }
+                  errorMessage={formik.errors[name as keyof BlogFormValues]}
+                />
+              ))}
+              <Button type="submit" color="#eb3e8c" loading={formik.isSubmitting}>
+                Create Blog
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setShowModal(false)}
+                color="#dc3545"
+              >
+                Close
+              </Button>
+            </form>
+          </div>
         </div>
-    </div>
       )}
     </>
   );
 };
 
 export default AddBlog;
-

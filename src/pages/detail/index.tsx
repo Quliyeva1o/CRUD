@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useGetBlogQuery,
-  useCreateCommentMutation,
-} from "../../redux/slices/apiSlice";
+import {useGetBlogQuery, useCreateCommentMutation} from "../../redux/slices/apiSlice";
 import Loader from "../../components/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
@@ -15,17 +12,16 @@ import { commentFormFields } from "../../utils/formFields";
 
 const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: blog, error, isLoading, refetch } = useGetBlogQuery(id || "");
+  const { data: blog, error, isLoading } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
-  const [notification, setNotification] = useState<{
-    visible: boolean;
-    message: string;
-  }>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{visible: boolean; message: string;}>({ visible: false, message: "" });
   const [comments, setComments] = useState<any>([]);
 
   useEffect(() => {
     setComments(blog?.comments);
   }, [blog]);
+
+
   // FORMİK
   const formik = useFormik<CommentValues>({
     initialValues: {
@@ -56,6 +52,7 @@ const Detail: React.FC = () => {
     },
   });
 
+  
   // LOADINGS & ERRORS
   if (isLoading) return <Loader />;
   if (error) return <p>Error fetching blog details. Please try again later.</p>;
