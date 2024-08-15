@@ -93,14 +93,14 @@ const Detail: React.FC = () => {
   // RETURN
   return (
     <div className={styles.detail}>
-      <h1>{blog.title}</h1>
       <img
         src={
           blog.img ||
-          "https://i.pinimg.com/236x/97/43/ec/9743ecac80966a95e9d328c08b995c04.jpg"
+          "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"
         }
         alt={blog.title}
       />
+      <h1>{blog.title}</h1>
       <p>{blog.body}</p>
 
       {comments?.length > 0 && (
@@ -130,9 +130,7 @@ const Detail: React.FC = () => {
               value={formik.values[input.name as keyof CommentValues]}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                Boolean(formik.errors[input.name as keyof CommentValues]) 
-              }
+              error={Boolean(formik.errors[input.name as keyof CommentValues])}
               errorMessage={formik.errors[input.name as keyof CommentValues]}
             />
           ))}

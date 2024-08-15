@@ -117,14 +117,11 @@ const Home = () => {
               filteredBlogs.map(({ id, img, title }) => (
                 <div key={id} className={styles.blog_card}>
                   <img
-                    src={
-                      img
-                        ? img
-                        : "https://qph.cf2.quoracdn.net/main-qimg-1a4bafe2085452fdc55f646e3e31279c-lq"
-                    }
+                    src={img? img: "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"}
                     alt={`Blog titled ${title}`}
                   />
-                  <h1>{title}</h1>
+                <div className={styles.textContent}>
+                <h1>{title}</h1>
                   <div className={styles.card_btns}>
                     <Button size="small" onClick={() => setEditPostId(id)}>
                       Edit
@@ -140,6 +137,7 @@ const Home = () => {
                       <DeleteIcon />
                     </Button>
                   </div>
+                </div>
                 </div>
               ))
             ) : (

@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export const blogValidationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   body: Yup.string().required("Body is required"),
-  img: Yup.string().url("Invalid image URL").required("Image URL is required"),
+  img: Yup.string().url("Invalid image URL"),
 });
 
 export const commentValidationSchema = Yup.object({
