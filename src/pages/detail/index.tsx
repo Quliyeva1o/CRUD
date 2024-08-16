@@ -3,14 +3,14 @@ import { useParams } from "react-router-dom";
 import {
   useGetBlogQuery,
   useCreateCommentMutation,
-} from "../../redux/slices/apiSlice";
-import Loader from "../../components/loader";
+} from "../../store/slices/apiSlice";
+import Loader from "../../common/ui/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
-import Input from "../../components/input";
+import Input from "../../common/ui/input";
 import { CommentValues } from "../../types";
 import { commentValidationSchema } from "../../utils/validations";
-import Button from "../../components/button";
+import Button from "../../common/ui/button";
 import { commentFormFields } from "../../utils/formFields";
 
 const Detail: React.FC = () => {
@@ -56,34 +56,7 @@ const Detail: React.FC = () => {
     },
   });
 
-  // const formik = useFormik<CommentValues>({
-  //   initialValues: {
-  //     name: "",
-  //     email: "",
-  //     body: "",
-  //   },
-  //   validateOnChange: true,
-  //   validationSchema: commentValidationSchema,
-
-  //   onSubmit: async (values, { resetForm }: FormikHelpers<CommentValues>) => {
-  //     try {
-  //       await addComment({ ...values, postId: blog?.id }).unwrap();
-  //       setComments([...comments, values]);
-  //       resetForm();
-
-  //       // NOTIFICATION
-  //       setNotification({
-  //         visible: true,
-  //         message: "Comment added successfully!",
-  //       });
-  //       setTimeout(() => {
-  //         setNotification({ visible: false, message: "" });
-  //       }, 3000);
-  //     } catch (err) {
-  //       console.error("Failed to add comment:", err);
-  //     }
-  //   },
-  // });
+ 
 
   // LOADINGS & ERRORS
   if (isLoading) return <Loader />;

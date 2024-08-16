@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import { useCreateBlogMutation } from "../../../../redux/slices/apiSlice";
+import { useCreateBlogMutation } from "../../../../store/slices/apiSlice";
 import styles from "./index.module.scss";
-import Button from "../../../../components/button";
-import Input from "../../../../components/input";
+import Button from "../../../../common/ui/button";
+import Input from "../../../../common/ui/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
-import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { setBlogs } from "../../../../redux/slices/blogsSlice";
-import Modal from "../../../../components/modal";
-import { RootState } from "../../../../redux/store";
+import { setBlogs } from "../../../../store/slices/blogsSlice";
+import Modal from "../../../../common/ui/modal";
+import { RootState } from "../../../../store/store";
 
 const AddBlog: React.FC = () => {
   const [createBlog] = useCreateBlogMutation();
@@ -32,9 +31,8 @@ const AddBlog: React.FC = () => {
     ) => {
       try {
         setSubmitting(true);
-        const newBlog = { ...values, id: nanoid() };
-        dispatch(setBlogs([...blogs, newBlog]));
-        await createBlog(newBlog).unwrap();
+        const res = await createBlog(values).unwrap();
+        dispatch(setBlogs([...blogs, res]));
         resetForm();
         setShowModal(false);
       } catch (err) {

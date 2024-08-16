@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import Button from "../../components/button";
+import Button from "../../common/ui/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
-import Loader from "../../components/loader";
+import Loader from "../../common/ui/loader";
 import { Link } from "react-router-dom";
 import {
   useGetAllBlogsQuery,
   useDeleteBlogMutation,
-} from "../../redux/slices/apiSlice";
+} from "../../store/slices/apiSlice";
 import styles from "./index.module.scss";
 import EditBlog from "./components/editBlog/index";
 import AddBlog from "./components/addBlog";
-import Input from "../../components/input";
-import { setBlogs } from "../../redux/slices/blogsSlice";
+import Input from "../../common/ui/input";
+import { setBlogs } from "../../store/slices/blogsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import Modal from "../../components/modal";
+import { RootState } from "../../store/store";
+import Modal from "../../common/ui/modal";
 
 const Home = () => {
   const {

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import { useUpdateBlogMutation } from "../../../../redux/slices/apiSlice";
+import { useUpdateBlogMutation } from "../../../../store/slices/apiSlice";
 import styles from "./index.module.scss";
-import Button from "../../../../components/button";
-import Input from "../../../../components/input";
+import Button from "../../../../common/ui/button";
+import Input from "../../../../common/ui/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
-import { RootState } from "../../../../redux/store";
+import { RootState } from "../../../../store/store";
 import { useSelector } from "react-redux";
-import Modal from "../../../../components/modal";
+import Modal from "../../../../common/ui/modal";
 
 interface EditBlogProps {
   postId: string;
