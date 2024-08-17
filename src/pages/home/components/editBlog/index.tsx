@@ -44,12 +44,9 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
             value={formik.values[name as keyof BlogFormValues]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched[name as keyof BlogFormValues] &&
-              Boolean(formik.errors[name as keyof BlogFormValues])
-            }
-            errorMessage={formik.errors[name as keyof BlogFormValues]}
-          />
+            error={formik.touched[name as keyof BlogFormValues] &&
+              Boolean(formik.errors[name as keyof BlogFormValues])}
+            errorMessage={formik.errors[name as keyof BlogFormValues]}/>
         ))}
         <Button type="submit" color="#eb3e8c" loading={loading}>
           Save Changes

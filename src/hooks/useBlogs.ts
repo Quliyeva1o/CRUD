@@ -2,28 +2,29 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { setBlogs } from "../store/slices/blogsSlice";
-import { useGetAllBlogsQuery } from "../store/slices/apiSlice";
+import { useGetAllBlogsQuery } from "../store/slices/apiService";
+
+const createSearchRegex = (query: string) => {
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(escapedQuery, "i");
+};
 
 const useBlogs = () => {
-  const { data: myBlogs = [], error, isLoading } = useGetAllBlogsQuery();
+  const { data: myBlogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
   const { blogs } = useSelector((state: RootState) => state.blogs);
   const dispatch = useDispatch();
-
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBlogs, setFilteredBlogs] = useState<Array<{ id: string; img?: string; title: string; body: string }>>([]);
 
   useEffect(() => {
-    const getRegex = (query: string) => {
-      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      return new RegExp(escapedQuery, "i");
-    };
-
-    const regex = getRegex(searchQuery);
-    const filtered = blogs.filter(
-      (blog) => regex.test(blog.title) || regex.test(blog.body)
-    );
+    const regex = createSearchRegex(searchQuery);
+    const filtered = blogs.filter(blog => regex.test(blog.title) || regex.test(blog.body));
     setFilteredBlogs(filtered.reverse());
   }, [searchQuery, blogs]);
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const useBlogs = () => {
     setSearchQuery,
     filteredBlogs,
     isLoading,
-    error
+    error,
   };
 };
 

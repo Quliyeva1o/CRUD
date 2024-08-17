@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { apiService } from "./slices/apiSlice";
+import { apiService } from "./slices/apiService";
 import blogReducer from "./slices/blogsSlice";
 
 export const store = configureStore({

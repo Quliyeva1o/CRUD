@@ -14,7 +14,7 @@ import styles from "./index.module.scss";
 const Home = () => {
   // CUSTOM HOOKS
   const { searchQuery, setSearchQuery, filteredBlogs, isLoading, error } = useBlogs();
-  const { deleteBlogId, setDeleteBlogId, handleDeleteBlog, loading: deleteLoading } = useDeleteBlog();
+  const {deleteBlogId, setDeleteBlogId,handleDeleteBlog,loading: deleteLoading} = useDeleteBlog();
 
   //STATES
   const [editPostId, setEditPostId] = useState<string | null>(null);
@@ -45,13 +45,18 @@ const Home = () => {
             filteredBlogs.map(({ id, img, title }) => (
               <div key={id} className={styles.blog_card}>
                 <img
-                  src={img || "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"}
+                  src={
+                    img ||
+                    "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"
+                  }
                   alt={`Blog titled ${title}`}
                 />
                 <div className={styles.textContent}>
                   <h1>{title}</h1>
                   <div className={styles.card_btns}>
-                    <Button size="small" onClick={() => setEditPostId(id)}>Edit</Button>
+                    <Button size="small" onClick={() => setEditPostId(id)}>
+                      Edit
+                    </Button>
                     <Link to={`blogs/${id}`}>
                       <Button size="small">Detail</Button>
                     </Link>
@@ -72,14 +77,15 @@ const Home = () => {
         </div>
       )}
       {editPostId && (
-        <EditBlog
-          postId={editPostId}
-          onClose={() => setEditPostId(null)}
-        />
+        <EditBlog postId={editPostId} onClose={() => setEditPostId(null)} />
       )}
       {deleteBlogId && (
-        <Modal show={Boolean(deleteBlogId)} onClose={() => setDeleteBlogId(null)}>
-          <p className={styles.modalText}>Are you sure you want to delete this blog?</p>
+        <Modal
+          show={Boolean(deleteBlogId)}
+          onClose={() => setDeleteBlogId(null)}>
+          <p className={styles.modalText}>
+            Are you sure you want to delete this blog?
+          </p>
           <div className={styles.modalActions}>
             <Button onClick={handleDeleteBlog}>Yes</Button>
             <Button onClick={() => setDeleteBlogId(null)}>No</Button>

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useGetBlogQuery,
-  useCreateCommentMutation,
-} from "../../store/slices/apiSlice";
+import {useGetBlogQuery,useCreateCommentMutation} from "../../store/slices/apiService";
 import Loader from "../../common/ui/loader";
 import styles from "./index.module.scss";
 import { useFormik, FormikHelpers } from "formik";
@@ -17,10 +14,7 @@ const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: blog, error, isLoading } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
-  const [notification, setNotification] = useState<{
-    visible: boolean;
-    message: string;
-  }>({ visible: false, message: "" });
+  const [notification, setNotification] = useState<{visible: boolean;message: string}>({ visible: false, message: "" });
   const [comments, setComments] = useState<any>([]);
 
   useEffect(() => {
@@ -55,8 +49,6 @@ const Detail: React.FC = () => {
       }
     },
   });
-
- 
 
   // LOADINGS & ERRORS
   if (isLoading) return <Loader />;

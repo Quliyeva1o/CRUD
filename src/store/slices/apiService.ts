@@ -5,6 +5,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const apiService = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  tagTypes: ['Blog'],
   endpoints: (builder) => ({
     getAllBlogs: builder.query<Blog[], void>({
       query: () => "posts",
@@ -29,14 +30,12 @@ export const apiService = createApi({
         body: changes,
       }),
     }),
-
     deleteBlog: builder.mutation<void, string>({
       query: (id) => ({
         url: `posts/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
-
     createComment: builder.mutation<Comment, Partial<Comment>>({
       query: (newComment) => ({
         url: "comments",
