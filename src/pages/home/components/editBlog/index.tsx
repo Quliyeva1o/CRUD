@@ -1,11 +1,13 @@
 import React from "react";
-import { BlogFormValues } from "../../../../types";
-import Input from "../../../../common/ui/input";
+import { useFormik, FormikHelpers } from "formik";
 import Button from "../../../../common/ui/button";
+import Input from "../../../../common/ui/input";
+import { BlogFormValues } from "../../../../types";
+import { blogValidationSchema } from "../../../../utils/validations";
+import { blogFormFields } from "../../../../utils/formFields";
 import Modal from "../../../../common/ui/modal";
 import useEditBlog from "../../../../hooks/useEditBlog";
 import styles from "./index.module.scss";
-import { blogFormFields } from "../../../../utils/formFields";
 
 interface EditBlogProps {
   postId: string;
@@ -13,9 +15,21 @@ interface EditBlogProps {
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
+  const { blog, loading, handleUpdateBlog } = useEditBlog(postId, onClose);
 
-  //USEEDITBLOG HOOK
-  const { formik, loading } = useEditBlog({ postId, onClose });
+  const formik = useFormik<BlogFormValues>({
+    initialValues: {
+      title: blog?.title || "",
+      body: blog?.body || "",
+      img: blog?.img || "",
+    },
+    validationSchema: blogValidationSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
+      await handleUpdateBlog(values);
+      resetForm();
+    },
+  });
 
   return (
     <Modal show={true} onClose={onClose}>
