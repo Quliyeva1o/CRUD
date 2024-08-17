@@ -1,62 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useFormik, FormikHelpers } from "formik";
-import { useUpdateBlogMutation } from "../../../../store/slices/apiSlice";
-import styles from "./index.module.scss";
-import Button from "../../../../common/ui/button";
-import Input from "../../../../common/ui/input";
+import React from "react";
 import { BlogFormValues } from "../../../../types";
-import { blogValidationSchema } from "../../../../utils/validations";
-import { blogFormFields } from "../../../../utils/formFields";
-import { RootState } from "../../../../store/store";
-import { useSelector } from "react-redux";
+import Input from "../../../../common/ui/input";
+import Button from "../../../../common/ui/button";
 import Modal from "../../../../common/ui/modal";
+import useEditBlog from "../../../../hooks/useEditBlog";
+import styles from "./index.module.scss";
+import { blogFormFields } from "../../../../utils/formFields";
 
 interface EditBlogProps {
   postId: string;
   onClose: () => void;
-  onUpdate: (updatedBlog: {
-    id: string;
-    title: string;
-    body: string;
-    img?: string;
-  }) => void;
 }
 
-const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose, onUpdate }) => {
-  const [updateBlog] = useUpdateBlogMutation();
-  const [blog, setBlog] = useState<{ id: string; img?: string; title: string; body: string } | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { blogs } = useSelector((state: RootState) => state.blogs);
+const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
 
-  useEffect(() => {
-    setBlog(blogs.find((x) => x.id === postId));
-  }, [blogs, postId]);
-
-  const formik = useFormik<BlogFormValues>({
-    initialValues: {
-      title: blog?.title || "",
-      body: blog?.body || "",
-      img: blog?.img || "",
-    },
-    validationSchema: blogValidationSchema,
-    enableReinitialize: true,
-    onSubmit: async (values, { resetForm }: FormikHelpers<BlogFormValues>) => {
-      setLoading(true);
-      try {
-        const updatedBlog = await updateBlog({
-          id: postId,
-          changes: values,
-        }).unwrap();
-        resetForm();
-        onUpdate(updatedBlog);
-        onClose();
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    },
-  });
+  //USEEDITBLOG HOOK
+  const { formik, loading } = useEditBlog({ postId, onClose });
 
   return (
     <Modal show={true} onClose={onClose}>

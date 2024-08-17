@@ -1,22 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useFormik, FormikHelpers } from "formik";
-import { useCreateBlogMutation } from "../../../../store/slices/apiSlice";
-import styles from "./index.module.scss";
 import Button from "../../../../common/ui/button";
 import Input from "../../../../common/ui/input";
 import { BlogFormValues } from "../../../../types";
 import { blogValidationSchema } from "../../../../utils/validations";
 import { blogFormFields } from "../../../../utils/formFields";
-import { useDispatch, useSelector } from "react-redux";
-import { setBlogs } from "../../../../store/slices/blogsSlice";
 import Modal from "../../../../common/ui/modal";
-import { RootState } from "../../../../store/store";
+import useAddBlog from "../../../../hooks/useAddBlog";
+import styles from "./index.module.scss";
 
 const AddBlog: React.FC = () => {
-  const [createBlog] = useCreateBlogMutation();
-  const [showModal, setShowModal] = useState(false);
-  const dispatch = useDispatch();
-  const { blogs } = useSelector((state: RootState) => state.blogs);
+
+  const { showModal, setShowModal, handleCreateBlog } = useAddBlog();
 
   const formik = useFormik<BlogFormValues>({
     initialValues: {
@@ -25,21 +20,10 @@ const AddBlog: React.FC = () => {
       img: "",
     },
     validationSchema: blogValidationSchema,
-    onSubmit: async (
-      values,
-      { resetForm, setSubmitting }: FormikHelpers<BlogFormValues>
-    ) => {
-      try {
-        setSubmitting(true);
-        const res = await createBlog(values).unwrap();
-        dispatch(setBlogs([...blogs, res]));
-        resetForm();
-        setShowModal(false);
-      } catch (err) {
-        console.error("Failed to create blog:", err);
-      } finally {
-        setSubmitting(false);
-      }
+    onSubmit: async (values,{ resetForm, setSubmitting }: FormikHelpers<BlogFormValues>) => {
+      await handleCreateBlog(values);
+      resetForm();
+      setSubmitting(false);
     },
   });
 
@@ -74,8 +58,7 @@ const AddBlog: React.FC = () => {
           <Button
             type="button"
             onClick={() => setShowModal(false)}
-            color="#dc3545"
-          >
+            color="#dc3545">
             Close
           </Button>
         </form>
