@@ -1,14 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Blog, Comment } from './blogsSlice'; 
-import BASE_URL from '../../API/constants'; 
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Blog, Comment } from "./blogsSlice";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const apiService = createApi({
-  reducerPath: 'api',
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     getAllBlogs: builder.query<Blog[], void>({
-      query: () => 'posts',
-      
+      query: () => "posts",
     }),
 
     getBlog: builder.query<Blog, string>({
@@ -17,8 +16,8 @@ export const apiService = createApi({
 
     createBlog: builder.mutation<Blog, Partial<Blog>>({
       query: (newBlog) => ({
-        url: 'posts',
-        method: 'POST',
+        url: "posts",
+        method: "POST",
         body: newBlog,
       }),
     }),
@@ -26,7 +25,7 @@ export const apiService = createApi({
     updateBlog: builder.mutation<Blog, { id: string; changes: Partial<Blog> }>({
       query: ({ id, changes }) => ({
         url: `posts/${id}`,
-        method: 'PATCH',
+        method: "PATCH",
         body: changes,
       }),
     }),
@@ -34,14 +33,14 @@ export const apiService = createApi({
     deleteBlog: builder.mutation<void, string>({
       query: (id) => ({
         url: `posts/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
     }),
 
     createComment: builder.mutation<Comment, Partial<Comment>>({
       query: (newComment) => ({
-        url: 'comments',
-        method: 'POST',
+        url: "comments",
+        method: "POST",
         body: newComment,
       }),
     }),

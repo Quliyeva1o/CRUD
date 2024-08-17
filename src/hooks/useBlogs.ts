@@ -1,4 +1,3 @@
-// hooks/useBlogs.ts
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -6,7 +5,7 @@ import { setBlogs } from "../store/slices/blogsSlice";
 import { useGetAllBlogsQuery } from "../store/slices/apiSlice";
 
 const useBlogs = () => {
-  const { data: myBlogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
+  const { data: myBlogs = [], error, isLoading } = useGetAllBlogsQuery();
   const { blogs } = useSelector((state: RootState) => state.blogs);
   const dispatch = useDispatch();
 
@@ -23,13 +22,9 @@ const useBlogs = () => {
     const filtered = blogs.filter(
       (blog) => regex.test(blog.title) || regex.test(blog.body)
     );
-
     setFilteredBlogs(filtered.reverse());
   }, [searchQuery, blogs]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   useEffect(() => {
     if (JSON.stringify(myBlogs) !== JSON.stringify(blogs)) {
