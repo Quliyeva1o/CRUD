@@ -5,7 +5,7 @@ import { BlogFormValues } from "../types";
 
 const useEditBlog = (postId: string, onClose: () => void) => {
   const [updateBlog] = useUpdateBlogMutation();
-  const { blogs, loading } = useSelector((state: RootState) => state.blogs);
+  const { blogs } = useSelector((state: RootState) => state.blogs);
   const blog = blogs.find((x) => x.id === postId);
 
   const handleUpdateBlog = async (values: BlogFormValues) => {
@@ -19,7 +19,6 @@ const useEditBlog = (postId: string, onClose: () => void) => {
 
   return {
     blog,
-    loading, 
     handleUpdateBlog,
   };
 };

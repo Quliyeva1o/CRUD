@@ -8,6 +8,8 @@ import { blogFormFields } from "../../../../utils/formFields";
 import Modal from "../../../../common/ui/modal";
 import useEditBlog from "../../../../hooks/useEditBlog";
 import styles from "./index.module.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
 
 interface EditBlogProps {
   postId: string;
@@ -15,7 +17,8 @@ interface EditBlogProps {
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
-  const { blog, loading, handleUpdateBlog } = useEditBlog(postId, onClose);
+  const { blog, handleUpdateBlog } = useEditBlog(postId, onClose);
+  const { loading } = useSelector((state: RootState) => state.blogs);
 
   const formik = useFormik<BlogFormValues>({
     initialValues: {
@@ -44,9 +47,12 @@ const EditBlog: React.FC<EditBlogProps> = ({ postId, onClose }) => {
             value={formik.values[name as keyof BlogFormValues]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched[name as keyof BlogFormValues] &&
-              Boolean(formik.errors[name as keyof BlogFormValues])}
-            errorMessage={formik.errors[name as keyof BlogFormValues]}/>
+            error={
+              formik.touched[name as keyof BlogFormValues] &&
+              Boolean(formik.errors[name as keyof BlogFormValues])
+            }
+            errorMessage={formik.errors[name as keyof BlogFormValues]}
+          />
         ))}
         <Button type="submit" color="#eb3e8c" loading={loading}>
           Save Changes

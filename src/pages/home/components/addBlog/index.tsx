@@ -8,10 +8,13 @@ import { blogFormFields } from "../../../../utils/formFields";
 import Modal from "../../../../common/ui/modal";
 import useAddBlog from "../../../../hooks/useAddBlog";
 import styles from "./index.module.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
 
 const AddBlog: React.FC = () => {
 
   const { showModal, setShowModal, handleCreateBlog } = useAddBlog();
+  const { loading } = useSelector((state: RootState) => state.blogs);
 
   const formik = useFormik<BlogFormValues>({
     initialValues: {
@@ -20,10 +23,9 @@ const AddBlog: React.FC = () => {
       img: "",
     },
     validationSchema: blogValidationSchema,
-    onSubmit: async (values,{ resetForm, setSubmitting }: FormikHelpers<BlogFormValues>) => {
+    onSubmit: async (values,{ resetForm }: FormikHelpers<BlogFormValues>) => {
       await handleCreateBlog(values);
       resetForm();
-      setSubmitting(false);
     },
   });
 
@@ -52,7 +54,7 @@ const AddBlog: React.FC = () => {
               errorMessage={formik.errors[name as keyof BlogFormValues]}
             />
           ))}
-          <Button type="submit" color="#eb3e8c" loading={formik.isSubmitting}>
+          <Button type="submit" color="#eb3e8c" loading={loading}>
             Create Blog
           </Button>
           <Button
