@@ -10,7 +10,7 @@ const createSearchRegex = (query: string) => {
 };
 
 const useBlogs = () => {
-  const { data: myBlogs = [], error, isLoading, refetch } = useGetAllBlogsQuery();
+  const { data: myBlogs = [], refetch } = useGetAllBlogsQuery();
   const { blogs } = useSelector((state: RootState) => state.blogs);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -37,8 +37,6 @@ const useBlogs = () => {
     searchQuery,
     setSearchQuery,
     filteredBlogs,
-    isLoading,
-    error,
   };
 };
 

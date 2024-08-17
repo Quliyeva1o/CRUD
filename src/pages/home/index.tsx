@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 import { Link } from "react-router-dom";
 import Button from "../../common/ui/button";
 import DeleteIcon from "../../assets/icons/deleteIcon";
@@ -13,14 +15,15 @@ import styles from "./index.module.scss";
 
 const Home = () => {
   // CUSTOM HOOKS
-  const { searchQuery, setSearchQuery, filteredBlogs, isLoading, error } = useBlogs();
-  const {deleteBlogId, setDeleteBlogId,handleDeleteBlog,loading: deleteLoading} = useDeleteBlog();
+  const { searchQuery, setSearchQuery, filteredBlogs } = useBlogs();
+  const { loading, error } = useSelector((state: RootState) => state.blogs);
+  const { deleteBlogId, setDeleteBlogId, handleDeleteBlog } = useDeleteBlog();
 
-  //STATES
+  // STATES
   const [editPostId, setEditPostId] = useState<string | null>(null);
 
-  //ERROR
-  if (error) return <p>Error fetching blogs. Please try again later.</p>;
+  // ERROR HANDLING
+  if (error) {return <p>{error}</p>}
 
   return (
     <div className="container">
@@ -37,20 +40,15 @@ const Home = () => {
           <AddBlog />
         </div>
       </div>
-      {isLoading || deleteLoading ? (
+      {loading ? (
         <Loader />
       ) : (
         <div className={styles.blogs}>
           {filteredBlogs.length > 0 ? (
             filteredBlogs.map(({ id, img, title }) => (
               <div key={id} className={styles.blog_card}>
-                <img
-                  src={
-                    img ||
-                    "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"
-                  }
-                  alt={`Blog titled ${title}`}
-                />
+                <img src={ img ||"https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"}
+                  alt={`Blog titled ${title}`}/>
                 <div className={styles.textContent}>
                   <h1>{title}</h1>
                   <div className={styles.card_btns}>
@@ -63,8 +61,7 @@ const Home = () => {
                     <Button
                       color="transparent"
                       size="small"
-                      onClick={() => setDeleteBlogId(id)}
-                    >
+                      onClick={() => setDeleteBlogId(id)}>
                       <DeleteIcon />
                     </Button>
                   </div>
@@ -82,13 +79,18 @@ const Home = () => {
       {deleteBlogId && (
         <Modal
           show={Boolean(deleteBlogId)}
-          onClose={() => setDeleteBlogId(null)}>
+          onClose={() => setDeleteBlogId(null)}
+        >
           <p className={styles.modalText}>
             Are you sure you want to delete this blog?
           </p>
           <div className={styles.modalActions}>
-            <Button onClick={handleDeleteBlog}>Yes</Button>
-            <Button onClick={() => setDeleteBlogId(null)}>No</Button>
+           {loading?<Loader/>: <><Button
+              onClick={handleDeleteBlog}
+              disabled={loading} >
+              Yes
+            </Button>
+            <Button onClick={() => setDeleteBlogId(null)}>No</Button></>}
           </div>
         </Modal>
       )}

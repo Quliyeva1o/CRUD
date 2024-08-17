@@ -120,7 +120,7 @@ const blogSlice = createSlice({
         state.error = null;
       })
       .addMatcher(apiService.endpoints.deleteBlog.matchRejected, (state, action) => {
-        state.loading = false;
+        state.loading = false;        
         state.error = action.error.message || "Failed to delete blog";
       })
       
