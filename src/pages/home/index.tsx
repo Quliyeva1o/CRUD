@@ -23,7 +23,6 @@ const Home = () => {
   const [editPostId, setEditPostId] = useState<string | null>(null);
 
   // ERROR HANDLING
-  if (error) {return <p>{error}</p>}
 
   return (
     <div className="container">
@@ -42,13 +41,20 @@ const Home = () => {
       </div>
       {loading ? (
         <Loader />
+      ) : error ? (
+        <p>{error}</p>
       ) : (
         <div className={styles.blogs}>
           {filteredBlogs.length > 0 ? (
             filteredBlogs.map(({ id, img, title }) => (
               <div key={id} className={styles.blog_card}>
-                <img src={ img ||"https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"}
-                  alt={`Blog titled ${title}`}/>
+                <img
+                  src={
+                    img ||
+                    "https://i.pinimg.com/736x/9d/2b/bc/9d2bbc6b0d78d00f4ef6ad4dae7aa7ec.jpg"
+                  }
+                  alt={`Blog titled ${title}`}
+                />
                 <div className={styles.textContent}>
                   <h1>{title}</h1>
                   <div className={styles.card_btns}>
@@ -61,7 +67,8 @@ const Home = () => {
                     <Button
                       color="transparent"
                       size="small"
-                      onClick={() => setDeleteBlogId(id)}>
+                      onClick={() => setDeleteBlogId(id)}
+                    >
                       <DeleteIcon />
                     </Button>
                   </div>
@@ -85,12 +92,16 @@ const Home = () => {
             Are you sure you want to delete this blog?
           </p>
           <div className={styles.modalActions}>
-           {loading?<Loader/>: <><Button
-              onClick={handleDeleteBlog}
-              disabled={loading} >
-              Yes
-            </Button>
-            <Button onClick={() => setDeleteBlogId(null)}>No</Button></>}
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <Button onClick={handleDeleteBlog} disabled={loading}>
+                  Yes
+                </Button>
+                <Button onClick={() => setDeleteBlogId(null)}>No</Button>
+              </>
+            )}
           </div>
         </Modal>
       )}

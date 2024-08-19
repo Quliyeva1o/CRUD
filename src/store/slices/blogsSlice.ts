@@ -57,10 +57,11 @@ const blogSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
-      .addMatcher(apiService.endpoints.getAllBlogs.matchRejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to load blogs";
-      })
+      // .addMatcher(apiService.endpoints.getAllBlogs.matchRejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.error.message || "Failed to load blogs";
+      // })
+      
       // Handle the state changes for `getBlog`
       .addMatcher(apiService.endpoints.getBlog.matchPending, (state) => {
         state.loading = true;
