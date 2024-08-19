@@ -1,22 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { apiService } from "./apiService";
+import { Blog } from "../../types";
 
-// Initial state
-export interface Comment {
-  email: string;
-  id: number;
-  name: string;
-  body: string;
-  postId: string;
-}
 
-export interface Blog {
-  comments?: Comment[];
-  id: string;
-  title: string;
-  body: string;
-  img?: string;
-}
 
 interface BlogState {
   blogs: Blog[];

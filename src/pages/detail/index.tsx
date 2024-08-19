@@ -11,18 +11,20 @@ import Button from "../../common/ui/button";
 import { commentFormFields } from "../../utils/formFields";
 
 const Detail: React.FC = () => {
+  // HOOKS
   const { id } = useParams<{ id: string }>();
   const { data: blog, error, isLoading } = useGetBlogQuery(id || "");
   const [addComment] = useCreateCommentMutation();
+  // STATES
   const [notification, setNotification] = useState<{visible: boolean;message: string}>({ visible: false, message: "" });
   const [comments, setComments] = useState<any>([]);
 
+  // EFFECTS
   useEffect(() => {
     setComments(blog?.comments);
   }, [blog]);
 
   // FORMİK
-
   const formik = useFormik({
     initialValues: {
       name: "",

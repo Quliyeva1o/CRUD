@@ -22,8 +22,7 @@ const Home = () => {
   // STATES
   const [editPostId, setEditPostId] = useState<string | null>(null);
 
-  // ERROR HANDLING
-
+ 
   return (
     <div className="container">
       <div className={styles.blog_heading}>
